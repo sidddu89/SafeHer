@@ -1,0 +1,36 @@
+# SafeHer Project Session Context
+
+- Use this file to keep track of what was done, what needs to be done, and any important notes or requirements.
+- At the end of each session, update this file with a summary or copy-paste relevant chat/code.
+- At the start of a new session, share the contents of this file with the assistant.
+
+---
+
+## Example Template
+
+### Date:
+[Add date here]
+26-7-25
+
+
+### What was done:
+- Defined the tech stack and main requirements.
+
+### Outstanding issues / TODOs:
+- Integrate Firebase OTP verification in Flutter frontend.
+- Connect Flutter frontend to Express backend.
+- Store user and emergency contacts data in MongoDB via Express backend.
+
+### Important requirements or context:
+- Flutter for frontend UI.
+- Firebase Authentication for OTP verification (phone number login).
+- Express.js for backend API.
+- MongoDB for storing user data and emergency contacts.
+- Emergency contacts must be saved in backend and available for future use (e.g., sending SMS).
+
+### Code snippets or API URLs:
+- 
+
+---
+
+# Paste or update below this line for each session 
