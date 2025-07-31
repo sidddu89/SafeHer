@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'screens/login_screen.dart';
 import 'screens/registration_screen.dart';
 import 'screens/otp_verification_screen.dart';
 import 'screens/home_screen.dart';

@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class EmergencyContactsScreen extends StatefulWidget {
+  const EmergencyContactsScreen({super.key});
+
   @override
   _EmergencyContactsScreenState createState() => _EmergencyContactsScreenState();
 }
@@ -94,7 +96,7 @@ class _EmergencyContactsScreenState extends State<EmergencyContactsScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error syncing contacts: ' + e.toString())),
+        SnackBar(content: Text('Error syncing contacts: $e')),
       );
     }
     setState(() => _loading = false);
@@ -166,7 +168,7 @@ class _EmergencyContactsScreenState extends State<EmergencyContactsScreen> {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,

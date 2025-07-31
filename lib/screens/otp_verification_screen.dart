@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
+  const OtpVerificationScreen({super.key});
+
   @override
   _OtpVerificationScreenState createState() => _OtpVerificationScreenState();
 }
@@ -8,7 +10,7 @@ class OtpVerificationScreen extends StatefulWidget {
 class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   final TextEditingController _otpController = TextEditingController();
   int _seconds = 30;
-  bool _loading = false;
+  final bool _loading = false;
   late String name;
   late String phone;
 
@@ -88,7 +90,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _loading ? null : _verifyOtp,
-                      child: _loading ? CircularProgressIndicator(color: Colors.white) : Text('Verify OTP'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: Color(0xFFFF8A80),
@@ -96,6 +97,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
+                      child: _loading ? CircularProgressIndicator(color: Colors.white) : Text('Verify OTP'),
                     ),
                   ),
                 ],

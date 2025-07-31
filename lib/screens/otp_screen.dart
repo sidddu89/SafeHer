@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http; // Added for http
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
   final String verificationId;
-  const OtpScreen({Key? key, required this.phoneNumber, required this.verificationId}) : super(key: key);
+  const OtpScreen({super.key, required this.phoneNumber, required this.verificationId});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -108,7 +108,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
 class UserDetailsScreen extends StatefulWidget {
   final String phoneNumber;
-  const UserDetailsScreen({Key? key, required this.phoneNumber}) : super(key: key);
+  const UserDetailsScreen({super.key, required this.phoneNumber});
 
   @override
   State<UserDetailsScreen> createState() => _UserDetailsScreenState();

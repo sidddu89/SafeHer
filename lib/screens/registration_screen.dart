@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
+
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
@@ -8,7 +10,7 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  bool _loading = false;
+  final bool _loading = false;
 
   void _continue() {
     // Validate and navigate to OTP screen
@@ -82,7 +84,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _loading ? null : _continue,
-                      child: _loading ? CircularProgressIndicator(color: Colors.white) : Text('Continue'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: Color(0xFFFF8A80),
@@ -90,6 +91,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
+                      child: _loading ? CircularProgressIndicator(color: Colors.white) : Text('Continue'),
                     ),
                   ),
                 ],
