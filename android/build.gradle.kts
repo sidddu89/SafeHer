@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 buildscript {
     repositories {
         google()
@@ -15,6 +16,8 @@ plugins {
 }
 
 
+=======
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
 allprojects {
     repositories {
         google()
@@ -29,8 +32,12 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+<<<<<<< HEAD
 subprojects 
 {
+=======
+subprojects {
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
     project.evaluationDependsOn(":app")
 }
 

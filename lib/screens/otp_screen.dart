@@ -7,11 +7,15 @@ import 'package:http/http.dart' as http; // Added for http
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
   final String verificationId;
+<<<<<<< HEAD
   const OtpScreen({
     super.key,
     required this.phoneNumber,
     required this.verificationId,
   });
+=======
+  const OtpScreen({super.key, required this.phoneNumber, required this.verificationId});
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -31,6 +35,7 @@ class _OtpScreenState extends State<OtpScreen> {
     try {
       await FirebaseAuth.instance.signInWithCredential(credential);
       setState(() => _loading = false);
+<<<<<<< HEAD
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -47,6 +52,19 @@ class _OtpScreenState extends State<OtpScreen> {
           context,
         ).showSnackBar(SnackBar(content: Text('Invalid OTP')));
       }
+=======
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UserDetailsScreen(phoneNumber: widget.phoneNumber),
+        ),
+      );
+    } catch (e) {
+      setState(() => _loading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid OTP')),
+      );
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
     }
   }
 
@@ -69,6 +87,7 @@ class _OtpScreenState extends State<OtpScreen> {
         child: Center(
           child: Card(
             elevation: 8,
+<<<<<<< HEAD
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),
@@ -78,6 +97,12 @@ class _OtpScreenState extends State<OtpScreen> {
                 horizontal: 32.0,
                 vertical: 36,
               ),
+=======
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            margin: const EdgeInsets.symmetric(horizontal: 24),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 36),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -89,18 +114,28 @@ class _OtpScreenState extends State<OtpScreen> {
                   const SizedBox(height: 8),
                   Text(
                     widget.phoneNumber,
+<<<<<<< HEAD
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1976D2),
                     ),
+=======
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1976D2)),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                   ),
                   const SizedBox(height: 32),
                   TextField(
                     controller: _otpController,
                     keyboardType: TextInputType.number,
                     maxLength: 6,
+<<<<<<< HEAD
                     decoration: const InputDecoration(labelText: 'OTP'),
+=======
+                    decoration: const InputDecoration(
+                      labelText: 'OTP',
+                    ),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                   ),
                   const SizedBox(height: 24),
                   SizedBox(
@@ -132,6 +167,7 @@ class UserDetailsScreen extends StatefulWidget {
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
   final TextEditingController _nameController = TextEditingController();
+<<<<<<< HEAD
   final List<TextEditingController> _contactNameControllers = List.generate(
     5,
     (_) => TextEditingController(),
@@ -140,10 +176,15 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
     5,
     (_) => TextEditingController(),
   );
+=======
+  final List<TextEditingController> _contactNameControllers = List.generate(5, (_) => TextEditingController());
+  final List<TextEditingController> _contactPhoneControllers = List.generate(5, (_) => TextEditingController());
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
   bool _loading = false;
 
   void _submit() async {
     final name = _nameController.text.trim();
+<<<<<<< HEAD
     final contacts = List.generate(
       5,
       (i) => {
@@ -156,6 +197,16 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Please fill all fields.')));
+=======
+    final contacts = List.generate(5, (i) => {
+      'name': _contactNameControllers[i].text.trim(),
+      'phone': _contactPhoneControllers[i].text.trim(),
+    });
+    if (name.isEmpty || contacts.any((c) => c['name']!.isEmpty || c['phone']!.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill all fields.')),
+      );
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
       return;
     }
     setState(() => _loading = true);
@@ -174,6 +225,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
       }),
     );
     setState(() => _loading = false);
+<<<<<<< HEAD
     if (mounted) {
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(
@@ -185,6 +237,17 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
           context,
         ).showSnackBar(SnackBar(content: Text('Failed to save profile.')));
       }
+=======
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Profile saved!')),
+      );
+      // Navigate to home or dashboard
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save profile.')),
+      );
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
     }
   }
 
@@ -206,9 +269,13 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         child: Center(
           child: Card(
             elevation: 8,
+<<<<<<< HEAD
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),
+=======
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -216,6 +283,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+<<<<<<< HEAD
                     const Text(
                       'Name',
                       style: TextStyle(
@@ -223,11 +291,15 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         color: Color(0xFF1976D2),
                       ),
                     ),
+=======
+                    const Text('Name', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1976D2))),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                     TextField(controller: _nameController),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+<<<<<<< HEAD
                         const Text(
                           'Emergency Contacts',
                           style: TextStyle(
@@ -246,16 +318,30 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                   ),
                                 );
                               }
+=======
+                        const Text('Emergency Contacts', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1976D2))),
+                        TextButton(
+                          onPressed: () {
+                            // Skip emergency contacts, just submit name
+                            if (_nameController.text.trim().isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Please enter your name.')),
+                              );
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                               return;
                             }
                             setState(() => _loading = true);
                             // Submit with empty contacts
                             final user = FirebaseAuth.instance.currentUser;
+<<<<<<< HEAD
                             final scaffoldMessenger = ScaffoldMessenger.of(
                               context,
                             );
                             try {
                               final idToken = await user!.getIdToken();
+=======
+                            user!.getIdToken().then((idToken) async {
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                               final response = await http.post(
                                 Uri.parse('http://localhost:5000/api/profile'),
                                 headers: {
@@ -269,6 +355,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                 }),
                               );
                               setState(() => _loading = false);
+<<<<<<< HEAD
                               if (mounted) {
                                 if (response.statusCode == 200) {
                                   scaffoldMessenger.showSnackBar(
@@ -325,16 +412,52 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         ],
                       ),
                     ),
+=======
+                              if (response.statusCode == 200) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Profile saved!')),
+                                );
+                                // Navigate to home or dashboard
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Failed to save profile.')),
+                                );
+                              }
+                            });
+                          },
+                          child: const Text('Skip', style: TextStyle(color: Color(0xFF1976D2), fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                    ...List.generate(5, (i) => Column(
+                      children: [
+                        TextField(
+                          controller: _contactNameControllers[i],
+                          decoration: InputDecoration(labelText: 'Contact ${i+1} Name'),
+                        ),
+                        TextField(
+                          controller: _contactPhoneControllers[i],
+                          decoration: InputDecoration(labelText: 'Contact ${i+1} Phone'),
+                          keyboardType: TextInputType.phone,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    )),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                     const SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: _loading ? null : _submit,
+<<<<<<< HEAD
                         child: _loading
                             ? const CircularProgressIndicator(
                                 color: Colors.white,
                               )
                             : const Text('Save'),
+=======
+                        child: _loading ? const CircularProgressIndicator(color: Colors.white) : const Text('Save'),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                       ),
                     ),
                   ],
@@ -346,4 +469,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+} 
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4

@@ -4,10 +4,17 @@ class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
+<<<<<<< HEAD
   SettingsScreenState createState() => SettingsScreenState();
 }
 
 class SettingsScreenState extends State<SettingsScreen> {
+=======
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
   bool gestureAlert = false;
   double gestureSensitivity = 0.5;
 
@@ -26,9 +33,13 @@ class SettingsScreenState extends State<SettingsScreen> {
             // Gesture Alert Toggle
             Card(
               elevation: 2,
+<<<<<<< HEAD
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
+=======
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
               child: SwitchListTile(
                 title: Text('Enable Gesture Alert'),
                 subtitle: Text('Toggle gesture detection on/off'),
@@ -37,14 +48,22 @@ class SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 24),
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
             // Gesture Sensitivity Slider
             if (gestureAlert) ...[
               Card(
                 elevation: 2,
+<<<<<<< HEAD
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
+=======
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -73,6 +92,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+<<<<<<< HEAD
                           Text(
                             'Low',
                             style: TextStyle(color: Colors.grey[600]),
@@ -81,6 +101,10 @@ class SettingsScreenState extends State<SettingsScreen> {
                             'High',
                             style: TextStyle(color: Colors.grey[600]),
                           ),
+=======
+                          Text('Low', style: TextStyle(color: Colors.grey[600])),
+                          Text('High', style: TextStyle(color: Colors.grey[600])),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                         ],
                       ),
                     ],
@@ -89,6 +113,7 @@ class SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 24),
             ],
+<<<<<<< HEAD
 
             // Change Gesture Mode
             Card(
@@ -96,6 +121,13 @@ class SettingsScreenState extends State<SettingsScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
+=======
+            
+            // Change Gesture Mode
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
               child: ListTile(
                 leading: Icon(Icons.gesture, color: Color(0xFFFF8A80)),
                 title: Text('Change Gesture Mode'),
@@ -104,15 +136,23 @@ class SettingsScreenState extends State<SettingsScreen> {
                 onTap: () {
                   // TODO: Navigate to gesture configuration screen
                   ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< HEAD
                     SnackBar(
                       content: Text('Gesture configuration coming soon!'),
                     ),
+=======
+                    SnackBar(content: Text('Gesture configuration coming soon!')),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                   );
                 },
               ),
             ),
             const SizedBox(height: 24),
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
             // Test Panic Button
             SizedBox(
               width: double.infinity,
@@ -128,17 +168,28 @@ class SettingsScreenState extends State<SettingsScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFFF8A80),
                   padding: const EdgeInsets.symmetric(vertical: 16),
+<<<<<<< HEAD
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
+=======
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                 ),
                 child: Text('Test Panic Button'),
               ),
             ),
+<<<<<<< HEAD
 
             // Spacer to push logout button to bottom
             Spacer(),
 
+=======
+            
+            // Spacer to push logout button to bottom
+            Spacer(),
+            
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
             // Logout Button at bottom right
             Align(
               alignment: Alignment.bottomRight,
@@ -152,14 +203,19 @@ class SettingsScreenState extends State<SettingsScreen> {
                     ),
                   );
                   // Navigate back to login screen
+<<<<<<< HEAD
                   Navigator.of(
                     context,
                   ).pushNamedAndRemoveUntil('/login', (route) => false);
+=======
+                  Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                 },
                 icon: Icon(Icons.logout, color: Colors.white),
                 label: Text('Logout'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
+<<<<<<< HEAD
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 12,
@@ -167,6 +223,10 @@ class SettingsScreenState extends State<SettingsScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+=======
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                 ),
               ),
             ),
@@ -175,4 +235,8 @@ class SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+} 
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4

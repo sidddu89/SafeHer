@@ -18,11 +18,15 @@ class HomeScreen extends StatelessWidget {
                   // Settings button at top left
                   IconButton(
                     onPressed: () => Navigator.pushNamed(context, '/settings'),
+<<<<<<< HEAD
                     icon: Icon(
                       Icons.settings,
                       color: Color(0xFFFF8A80),
                       size: 28,
                     ),
+=======
+                    icon: Icon(Icons.settings, color: Color(0xFFFF8A80), size: 28),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.grey[100],
                       padding: EdgeInsets.all(12),
@@ -34,11 +38,15 @@ class HomeScreen extends StatelessWidget {
                   // Emergency contacts at top right
                   IconButton(
                     onPressed: () => Navigator.pushNamed(context, '/contacts'),
+<<<<<<< HEAD
                     icon: Icon(
                       Icons.contacts,
                       color: Color(0xFFFF8A80),
                       size: 28,
                     ),
+=======
+                    icon: Icon(Icons.contacts, color: Color(0xFFFF8A80), size: 28),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.grey[100],
                       padding: EdgeInsets.all(12),
@@ -50,7 +58,11 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 40),
+<<<<<<< HEAD
 
+=======
+              
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
               // Live location container
               Container(
                 width: double.infinity,
@@ -63,7 +75,15 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+<<<<<<< HEAD
                     Icon(Icons.location_on, size: 48, color: Color(0xFFFF8A80)),
+=======
+                    Icon(
+                      Icons.location_on,
+                      size: 48,
+                      color: Color(0xFFFF8A80),
+                    ),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                     const SizedBox(height: 12),
                     Text(
                       'Live Location',
@@ -76,13 +96,24 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       'Location tracking active',
+<<<<<<< HEAD
                       style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+=======
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 40),
+<<<<<<< HEAD
 
+=======
+              
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
               // Panic button
               Container(
                 decoration: BoxDecoration(
@@ -90,7 +121,11 @@ class HomeScreen extends StatelessWidget {
                   color: Color(0xFFFF8A80),
                   boxShadow: [
                     BoxShadow(
+<<<<<<< HEAD
                       color: Color(0xFFFF8A80).withValues(alpha: 0.3),
+=======
+                      color: Color(0xFFFF8A80).withOpacity(0.3),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -112,4 +147,8 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+} 
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4

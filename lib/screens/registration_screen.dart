@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:firebase_auth/firebase_auth.dart';
+=======
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
   @override
+<<<<<<< HEAD
   RegistrationScreenState createState() => RegistrationScreenState();
 }
 
@@ -17,11 +21,25 @@ class RegistrationScreenState extends State<RegistrationScreen> {
     String name = _nameController.text.trim();
     String phone = _phoneController.text.trim();
     if (name.isEmpty || phone.isEmpty) {
+=======
+  _RegistrationScreenState createState() => _RegistrationScreenState();
+}
+
+class _RegistrationScreenState extends State<RegistrationScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final bool _loading = false;
+
+  void _continue() {
+    // Validate and navigate to OTP screen
+    if (_nameController.text.trim().isEmpty || _phoneController.text.trim().isEmpty) {
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter your name and phone number.')),
       );
       return;
     }
+<<<<<<< HEAD
     if (!RegExp(r'^\d{10}$').hasMatch(phone)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Phone number must be exactly 10 digits.')),
@@ -101,6 +119,12 @@ class RegistrationScreenState extends State<RegistrationScreen> {
         context,
       ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     }
+=======
+    Navigator.pushNamed(context, '/otp', arguments: {
+      'name': _nameController.text.trim(),
+      'phone': _phoneController.text.trim(),
+    });
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
   }
 
   @override
@@ -111,6 +135,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Card(
             elevation: 8,
+<<<<<<< HEAD
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32),
             ),
@@ -119,6 +144,11 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                 horizontal: 24.0,
                 vertical: 36,
               ),
+=======
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 36),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -148,7 +178,13 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                   const SizedBox(height: 32),
                   TextField(
                     controller: _nameController,
+<<<<<<< HEAD
                     decoration: const InputDecoration(labelText: 'Full Name'),
+=======
+                    decoration: const InputDecoration(
+                      labelText: 'Full Name',
+                    ),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                   ),
                   const SizedBox(height: 16),
                   TextField(
@@ -171,6 +207,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
+<<<<<<< HEAD
                       child: _loading
                           ? CircularProgressIndicator(color: Colors.white)
                           : Text('Continue'),
@@ -182,6 +219,11 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                     style: TextStyle(fontSize: 12, color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),
+=======
+                      child: _loading ? CircularProgressIndicator(color: Colors.white) : Text('Continue'),
+                    ),
+                  ),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                 ],
               ),
             ),
@@ -190,4 +232,8 @@ class RegistrationScreenState extends State<RegistrationScreen> {
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+} 
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4

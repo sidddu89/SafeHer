@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:firebase_auth/firebase_auth.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
@@ -29,6 +30,29 @@ class OtpVerificationScreenState extends State<OtpVerificationScreen> {
   @override
   void initState() {
     super.initState();
+=======
+
+class OtpVerificationScreen extends StatefulWidget {
+  const OtpVerificationScreen({super.key});
+
+  @override
+  _OtpVerificationScreenState createState() => _OtpVerificationScreenState();
+}
+
+class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
+  final TextEditingController _otpController = TextEditingController();
+  int _seconds = 30;
+  final bool _loading = false;
+  late String name;
+  late String phone;
+
+  @override
+  void didChangeDependencies() {
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    name = args?['name'] ?? '';
+    phone = args?['phone'] ?? '';
+    super.didChangeDependencies();
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
     _startTimer();
   }
 
@@ -37,15 +61,20 @@ class OtpVerificationScreenState extends State<OtpVerificationScreen> {
     Future.doWhile(() async {
       if (_seconds == 0) return false;
       await Future.delayed(Duration(seconds: 1));
+<<<<<<< HEAD
       if (mounted) {
         setState(() {
           _seconds--;
         });
       }
+=======
+      if (mounted) setState(() => _seconds--);
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
       return _seconds > 0;
     });
   }
 
+<<<<<<< HEAD
   void _verifyOtp() async {
     String otp = _otpControllers.map((c) => c.text).join();
     if (otp.length != 4) {
@@ -92,6 +121,11 @@ class OtpVerificationScreenState extends State<OtpVerificationScreen> {
       f.dispose();
     }
     super.dispose();
+=======
+  void _verifyOtp() {
+    // TODO: Implement OTP verification logic
+    Navigator.pushReplacementNamed(context, '/home');
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
   }
 
   @override
@@ -100,13 +134,18 @@ class OtpVerificationScreenState extends State<OtpVerificationScreen> {
       appBar: AppBar(
         leading: BackButton(),
         title: Text('OTP Verification'),
+<<<<<<< HEAD
         backgroundColor: Color(0xFF4F8DFF),
+=======
+        backgroundColor: Color(0xFFFF8A80),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Card(
             elevation: 8,
+<<<<<<< HEAD
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32),
             ),
@@ -115,17 +154,27 @@ class OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 horizontal: 24.0,
                 vertical: 36,
               ),
+=======
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 36),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
+<<<<<<< HEAD
                     'Enter the 4-digit OTP (try 1234 for demo).',
+=======
+                    'Enter the 4-digit OTP sent to your phone number.',
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                     style: TextStyle(fontSize: 16, color: Colors.black87),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+<<<<<<< HEAD
                     children: List.generate(
                       4,
                       (i) => Container(
@@ -155,15 +204,35 @@ class OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               ).requestFocus(_focusNodes[i - 1]);
                             }
                           },
+=======
+                    children: List.generate(4, (i) =>
+                      Container(
+                        width: 48,
+                        margin: EdgeInsets.symmetric(horizontal: 6),
+                        child: TextField(
+                          controller: _otpController,
+                          keyboardType: TextInputType.number,
+                          maxLength: 4,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 24, letterSpacing: 8),
+                          decoration: InputDecoration(
+                            counterText: '',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
+<<<<<<< HEAD
                   Text(
                     'Resend in 00: ${_seconds.toString().padLeft(2, '0')}',
                     style: TextStyle(color: Colors.black54),
                   ),
+=======
+                  Text('Resend in 00:${_seconds.toString().padLeft(2, '0')}', style: TextStyle(color: Colors.black54)),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                   const SizedBox(height: 32),
                   SizedBox(
                     width: double.infinity,
@@ -171,14 +240,22 @@ class OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       onPressed: _loading ? null : _verifyOtp,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
+<<<<<<< HEAD
                         backgroundColor: Color(0xFF4F8DFF),
+=======
+                        backgroundColor: Color(0xFFFF8A80),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
+<<<<<<< HEAD
                       child: _loading
                           ? CircularProgressIndicator(color: Colors.white)
                           : Text('Verify OTP'),
+=======
+                      child: _loading ? CircularProgressIndicator(color: Colors.white) : Text('Verify OTP'),
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                     ),
                   ),
                 ],
@@ -189,4 +266,8 @@ class OtpVerificationScreenState extends State<OtpVerificationScreen> {
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+} 
+>>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
