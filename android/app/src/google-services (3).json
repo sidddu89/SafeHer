@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "174168027843",
+    "firebase_url": "https://safeher-cb626-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "safeher-cb626",
+    "storage_bucket": "safeher-cb626.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174168027843:android:042104a6883e9bafdce876",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmzOg4Vmb14yUKQFR1UxLX0zMhlTAocFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174168027843:android:766461c2f4ad8b75dce876",
+        "android_client_info": {
+          "package_name": "com.safeher.SafeHer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmzOg4Vmb14yUKQFR1UxLX0zMhlTAocFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
