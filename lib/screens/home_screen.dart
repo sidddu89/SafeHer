@@ -1,154 +1,134 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _isPanicActive = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              // Top row with settings and emergency contacts
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Settings button at top left
-                  IconButton(
-                    onPressed: () => Navigator.pushNamed(context, '/settings'),
-<<<<<<< HEAD
-                    icon: Icon(
-                      Icons.settings,
-                      color: Color(0xFFFF8A80),
-                      size: 28,
-                    ),
-=======
-                    icon: Icon(Icons.settings, color: Color(0xFFFF8A80), size: 28),
->>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.grey[100],
-                      padding: EdgeInsets.all(12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  // Emergency contacts at top right
-                  IconButton(
-                    onPressed: () => Navigator.pushNamed(context, '/contacts'),
-<<<<<<< HEAD
-                    icon: Icon(
-                      Icons.contacts,
-                      color: Color(0xFFFF8A80),
-                      size: 28,
-                    ),
-=======
-                    icon: Icon(Icons.contacts, color: Color(0xFFFF8A80), size: 28),
->>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.grey[100],
-                      padding: EdgeInsets.all(12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 40),
-<<<<<<< HEAD
-
-=======
-              
->>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
-              // Live location container
-              Container(
-                width: double.infinity,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey[300]!, width: 1),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Top row with settings and emergency contacts
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-<<<<<<< HEAD
-                    Icon(Icons.location_on, size: 48, color: Color(0xFFFF8A80)),
-=======
-                    Icon(
-                      Icons.location_on,
-                      size: 48,
-                      color: Color(0xFFFF8A80),
-                    ),
->>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
-                    const SizedBox(height: 12),
-                    Text(
-                      'Live Location',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[700],
+                    // Settings button at top left
+                    IconButton(
+                      onPressed: () => Navigator.pushNamed(context, '/settings'),
+                      icon: Icon(Icons.settings, color: Color(0xFFFF8A80), size: 28),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.grey[100],
+                        padding: EdgeInsets.all(12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Location tracking active',
-<<<<<<< HEAD
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-=======
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
+                    // Emergency contacts at top right
+                    IconButton(
+                      onPressed: () => Navigator.pushNamed(context, '/contacts'),
+                      icon: Icon(Icons.contacts, color: Color(0xFFFF8A80), size: 28),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.grey[100],
+                        padding: EdgeInsets.all(12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
->>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 40),
-<<<<<<< HEAD
+                const SizedBox(height: 40),
 
-=======
-              
->>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
-              // Panic button
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFFF8A80),
-                  boxShadow: [
-                    BoxShadow(
-<<<<<<< HEAD
-                      color: Color(0xFFFF8A80).withValues(alpha: 0.3),
-=======
-                      color: Color(0xFFFF8A80).withOpacity(0.3),
->>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(36),
-                child: Text(
-                  'HELP',
-                  style: TextStyle(
-                    fontSize: 32,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                // Live location container
+                Container(
+                  width: double.infinity,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey[300]!, width: 1),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.location_on, size: 48, color: Color(0xFFFF8A80)),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Live Location',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Location tracking active',
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 40),
+
+                // Panic button
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isPanicActive = !_isPanicActive;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(_isPanicActive
+                            ? 'Panic mode activated!'
+                            : 'Panic mode deactivated.'),
+                        backgroundColor:
+                            _isPanicActive ? Colors.redAccent : Colors.green,
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _isPanicActive ? Colors.red : const Color(0xFFFF8A80),
+                      boxShadow: [
+                        BoxShadow(
+                          color: (_isPanicActive ? Colors.red : const Color(0xFFFF8A80))
+                              .withAlpha(128), // Replaced withAlpha(128) instead of deprecated withOpacity
+                          blurRadius: 20,
+                          spreadRadius: _isPanicActive ? 8 : 5,
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(36),
+                    child: Text(
+                      _isPanicActive ? 'CANCEL' : 'HELP',
+                      style: const TextStyle(
+                        fontSize: 32,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
-<<<<<<< HEAD
 }
-=======
-} 
->>>>>>> c2244a550e48377e839327453b2e2f0c42eb59e4
