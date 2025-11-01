@@ -46,6 +46,13 @@ class _PanicButtonScreenState extends State<PanicButtonScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1800),
     );
+    // Pre-warm location services when screen loads
+    _prewarmLocation();
+  }
+
+  /// Pre-warm location to ensure we have cached position ready
+  void _prewarmLocation() {
+    LocationSmsService().prewarmLocation();
   }
 
   @override
@@ -56,226 +63,240 @@ class _PanicButtonScreenState extends State<PanicButtonScreen>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final scheme = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: scheme.background,
-      body: SizedBox(
-        width: double.infinity,
-        height: size.height,
-        child: Stack(
+      body: SafeArea(
+        child: Column(
           children: [
-            // Main content area
+            // Header
             Container(
-              width: double.infinity,
-              height: size.height,
-              decoration: BoxDecoration(color: scheme.background),
-              child: Column(
-                children: [
-                  // Header
-                  SafeArea(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
-                      ),
-                      child: Text(
-                        'SafeHer',
-                        style: TextStyle(
-                          color: scheme.onBackground,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+              padding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 20,
+              ),
+              child: Text(
+                'SafeHer',
+                style: TextStyle(
+                  color: scheme.onBackground,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            
+            // Main content - Panic Button Area (Scrollable)
+            Expanded(
+              child: SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height - 
+                               MediaQuery.of(context).padding.top - 
+                               MediaQuery.of(context).padding.bottom - 
+                               kToolbarHeight - 
+                               kBottomNavigationBarHeight - 
+                               40, // Account for header + bottom nav + padding
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Emergency message
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          'Click here to feel SAFE.',
+                          style: const TextStyle(
+                            color: Color(0xFF646D87),
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
-                  ),
-                  
-                  // Main content - Panic Button Area
-                  Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Emergency message
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 32),
-                            child: Text(
-                              'Click here to feel SAFE.',
-                              style: const TextStyle(
-                                color: Color(0xFF646D87),
-                                fontSize: 16,
+                      
+                      SizedBox(height: 40),
+                      
+                      // Panic Button
+                      GestureDetector(
+                        onLongPressStart: (_) {
+                          if (!_rippling) {
+                            setState(() => _rippling = true);
+                            _rippleController.repeat();
+                          }
+                        },
+                        onLongPressEnd: (_) {},
+                        onLongPress: () async {
+                          if (!UserSession.isReady) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Please login first.')),
+                            );
+                            return;
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('EMERGENCY ALERT ACTIVATED! Sending SMS...'),
+                              backgroundColor: Colors.green,
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+
+                          // 1) Load contacts
+                          final contacts = await FirestoreService.instance
+                              .getEmergencyContactsOnce(UserSession.phoneNumber!);
+
+                          debugPrint('SafeHer: Loaded ${contacts.length} emergency contacts');
+
+                          if (contacts.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('No emergency contacts found! Please add contacts first.'),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 3),
+                              ),
+                            );
+                            return;
+                          }
+
+                          // 2) Send emergency alert with location and area details
+                          final name = UserSession.userName ?? 'Your contact';
+                          final locationService = LocationSmsService();
+                          final results = await locationService
+                              .sendAlertToContacts(contacts, name);
+
+                          debugPrint('SafeHer: SMS sent to ${results.length} contacts');
+
+                          // 3) Get location details for logging
+                          final position = await locationService.getCurrentLocation();
+                          String? link;
+                          String area = 'Unknown area';
+                          if (position != null) {
+                            link = 'https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}';
+                            area = 'Lat: ${position.latitude}, Lng: ${position.longitude}';
+                          }
+                          final msg = '🚨 SafeHer ALERT! ${name} may be in danger.\nLocation: ${area}\n${link != null ? 'Live location: $link' : 'Location not available.'}\nPlease call/check immediately.';
+
+                          // 5) Save panic log
+                          await FirestoreService.instance.addPanicLog(
+                            userDocId: UserSession.phoneNumber!,
+                            message: msg,
+                            locationLink: link,
+                            contactResults: results,
+                          );
+
+                          if (!mounted) return;
+                          final anySuccess = results.any((r) => (r['status'] ?? '').contains('SMS sent successfully') || (r['status'] ?? '').contains('SMS sent (timeout') || (r['status'] ?? '').contains('SMS app opened'));
+                          final successCount = results.where((r) => (r['status'] ?? '').contains('SMS sent successfully') || (r['status'] ?? '').contains('SMS sent (timeout')).length;
+                          final totalCount = results.length;
+                          
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(anySuccess
+                                  ? 'Emergency alert sent! ($successCount/$totalCount contacts notified)'
+                                  : 'Alert failed to send to all contacts. Check SMS permissions and signal.'),
+                              backgroundColor: anySuccess ? Colors.green : Colors.red,
+                            ),
+                          );
+                          if (mounted && _rippling) {
+                            _rippleController.stop();
+                            setState(() => _rippling = false);
+                          }
+                        },
+                        child: SizedBox(
+                          width: 260,
+                          height: 260,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              if (_rippling)
+                                AnimatedBuilder(
+                                  animation: _rippleController,
+                                  builder: (context, child) {
+                                    final v = _rippleController.value;
+                                    return Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        _RippleCircle(scale: v, color: scheme.primary),
+                                        _RippleCircle(scale: (v + 0.33) % 1.0, color: scheme.primary),
+                                        _RippleCircle(scale: (v + 0.66) % 1.0, color: scheme.primary),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              Container(
+                                width: 200,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.red.withOpacity(0.3),
+                                      spreadRadius: 5,
+                                      blurRadius: 15,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'PANIC\nBUTTON',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      
+                      SizedBox(height: 30),
+                      
+                      // Instructions
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 32),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Your emergency contacts will be notified immediately',
+                              style: TextStyle(
+                                color: scheme.onBackground.withOpacity(0.7),
+                                fontSize: 14,
                                 fontWeight: FontWeight.normal,
                               ),
                               textAlign: TextAlign.center,
                             ),
-                          ),
-                          
-                          SizedBox(height: 40),
-                          
-                          // Panic Button
-                          GestureDetector(
-                            onLongPressStart: (_) {
-                              if (!_rippling) {
-                                setState(() => _rippling = true);
-                                _rippleController.repeat();
-                              }
-                            },
-                            onLongPressEnd: (_) {},
-                            onLongPress: () async {
-                              if (!UserSession.isReady) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Please login first.')),
-                                );
-                                return;
-                              }
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('EMERGENCY ALERT ACTIVATED! Sending SMS...'),
-                                  backgroundColor: Colors.green,
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
-
-                              // 1) Load contacts
-                              final contacts = await FirestoreService.instance
-                                  .getEmergencyContactsOnce(UserSession.phoneNumber!);
-
-                              // 2) Send emergency alert with location and area details
-                              final name = UserSession.userName ?? 'Your contact';
-                              final locationService = LocationSmsService();
-                              final results = await locationService
-                                  .sendAlertToContacts(contacts, name);
-
-                              // 3) Get location details for logging
-                              final position = await locationService.getCurrentLocation();
-                              String? link;
-                              String area = 'Unknown area';
-                              if (position != null) {
-                                link = 'https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}';
-                                area = 'Lat: ${position.latitude}, Lng: ${position.longitude}';
-                              }
-                              final msg = '🚨 SafeHer ALERT! ${name} may be in danger.\nLocation: ${area}\n${link != null ? 'Live location: $link' : 'Location not available.'}\nPlease call/check immediately.';
-
-                              // 5) Save panic log
-                              await FirestoreService.instance.addPanicLog(
-                                userDocId: UserSession.phoneNumber!,
-                                message: msg,
-                                locationLink: link,
-                                contactResults: results,
-                              );
-
-                              if (!mounted) return;
-                              final anySuccess = results.any((r) => (r['status'] ?? '').contains('SMS sent successfully') || (r['status'] ?? '').contains('SMS app opened'));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(anySuccess
-                                      ? 'Panic log saved. SMS sent to some/all contacts.'
-                                      : 'Panic log saved. All sends failed.'),
-                                  backgroundColor: anySuccess ? Colors.green : Colors.red,
-                                ),
-                              );
-                              if (mounted && _rippling) {
-                                _rippleController.stop();
-                                setState(() => _rippling = false);
-                              }
-                            },
-                            child: SizedBox(
-                              width: 260,
-                              height: 260,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  if (_rippling)
-                                    AnimatedBuilder(
-                                      animation: _rippleController,
-                                      builder: (context, child) {
-                                        final v = _rippleController.value;
-                                        return Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            _RippleCircle(scale: v, color: scheme.primary),
-                                            _RippleCircle(scale: (v + 0.33) % 1.0, color: scheme.primary),
-                                            _RippleCircle(scale: (v + 0.66) % 1.0, color: scheme.primary),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  Container(
-                                    width: 200,
-                                    height: 200,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.red.withOpacity(0.3),
-                                          spreadRadius: 5,
-                                          blurRadius: 15,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'PANIC\nBUTTON',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            SizedBox(height: 8),
+                            Text(
+                              'Tap for test • Long press for emergency',
+                              style: TextStyle(
+                                color: scheme.onBackground.withOpacity(0.7),
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal,
+                                fontStyle: FontStyle.italic,
                               ),
+                              textAlign: TextAlign.center,
                             ),
-                          ),
-                          
-                          SizedBox(height: 30),
-                          
-                          // Instructions
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 32),
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Your emergency contacts will be notified immediately',
-                                  style: TextStyle(
-                                    color: scheme.onBackground.withOpacity(0.7),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Tap for test • Long press for emergency',
-                                  style: TextStyle(
-                                    color: scheme.onBackground.withOpacity(0.7),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
+                      // Dynamic bottom padding to prevent overflow
+                      SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 20),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 80,
-        child: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
             setState(() {
@@ -334,7 +355,6 @@ class _PanicButtonScreenState extends State<PanicButtonScreen>
             ),
           ],
         ),
-      ),
     );
   }
 }

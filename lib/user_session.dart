@@ -1,5 +1,6 @@
 // lib/user_session.dart
 import 'services/supabase_auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserSession {
   static String? userName;
@@ -27,10 +28,38 @@ class UserSession {
 
   static bool get isReady => userId.isNotEmpty;
   
-  /// Sign out from Supabase
+  /// Sign out from Supabase and clear persistent login
   static Future<void> signOut() async {
     await SupabaseAuthService.signOut();
     userName = null;
     phoneNumber = null;
+    
+    // Clear persistent login state
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('logged_in_phone');
+    await prefs.remove('logged_in_name');
+    await prefs.setBool('is_logged_in', false);
+  }
+
+  /// Restore login state from persistent storage
+  static Future<bool> restoreLoginState() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
+      
+      if (isLoggedIn) {
+        final phone = prefs.getString('logged_in_phone');
+        final name = prefs.getString('logged_in_name');
+        
+        if (phone != null && name != null) {
+          phoneNumber = phone;
+          userName = name;
+          return true;
+        }
+      }
+    } catch (e) {
+      // If there's any error, just return false
+    }
+    return false;
   }
 }

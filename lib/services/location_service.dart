@@ -34,6 +34,7 @@ class LocationService {
 
   /// Get a single high-accuracy GPS fix with a timeout.
   /// If services/permissions are missing, throws a descriptive exception.
+  /// Enhanced for Samsung devices with power management optimizations.
   Future<Position> getCurrentPositionGpsOnly({
     Duration timeLimit = const Duration(seconds: 60),
   }) async {
@@ -46,12 +47,13 @@ class LocationService {
 
     final desiredAccuracy = LocationAccuracy.bestForNavigation;
 
-    // Platform-specific settings to bias to GPS and avoid network-based location.
+    // Platform-specific settings optimized for Samsung and other Android devices
     final locationSettings = Platform.isAndroid
         ? AndroidSettings(
             accuracy: desiredAccuracy,
-            forceLocationManager: true, // Prefer GPS provider over fused/network.
-            intervalDuration: const Duration(seconds: 1),
+            forceLocationManager: true, // Prefer GPS provider over fused/network
+            intervalDuration: const Duration(milliseconds: 500), // Faster updates for Samsung
+            distanceFilter: 0, // Accept any movement for emergency situations
           )
         : AppleSettings(
             accuracy: desiredAccuracy,
@@ -60,20 +62,46 @@ class LocationService {
             pauseLocationUpdatesAutomatically: true,
           );
 
-    // Try last known as a quick optimistic read (may be null/offline stale), then do live fix.
+    // Try last known as a quick optimistic read first
     Position? last = await Geolocator.getLastKnownPosition();
 
     try {
-      // Use a position stream with our platform-specific settings, then take the first fix.
+      // Strategy 1: Try position stream (works better on Samsung devices)
       final live = await Geolocator
           .getPositionStream(locationSettings: locationSettings)
           .first
           .timeout(timeLimit);
       return live;
     } on TimeoutException {
-      // If we time out, return last known if available.
-      if (last != null) return last;
-      rethrow;
+      // Strategy 2: If stream times out, try direct getCurrentPosition with network assistance
+      try {
+        final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: (timeLimit.inSeconds * 0.7).round()), // Use 70% of remaining time
+        );
+        return position;
+      } catch (e) {
+        // Strategy 3: If direct call fails, return last known if available
+        if (last != null) {
+          return last;
+        }
+        rethrow;
+      }
+    } catch (e) {
+      // Strategy 4: Fallback to basic getCurrentPosition without forcing GPS
+      try {
+        final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.medium,
+          timeLimit: Duration(seconds: 10),
+        );
+        return position;
+      } catch (e2) {
+        // Strategy 5: Return last known position if all else fails
+        if (last != null) {
+          return last;
+        }
+        rethrow;
+      }
     }
   }
 

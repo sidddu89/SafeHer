@@ -6,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'supabase_config.dart';
 import 'safe_her_welcome_screen.dart';
-import 'manage_contacts_screen.dart';
 import 'theme.dart';
 
 Future<void> main() async {
@@ -49,22 +48,10 @@ class SafeHerApp extends StatelessWidget {
     return MaterialApp(
       title: 'SafeHer',
       theme: AppTheme.light(),
-      home: const AuthWrapper(),
+      home: const SafeHerWelcomeScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final session = SupabaseConfig.client.auth.currentSession;
-    if (session != null) {
-      return const ManageContactsScreen();
-    }
-    return const SafeHerWelcomeScreen();
-  }
-}
 

@@ -1,4 +1,4 @@
-'import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
@@ -98,23 +98,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     });
 
     try {
-      // Verify OTP with Supabase
-      final response = await SupabaseAuthService.verifyOTP(widget.phoneNumber, otp);
-      
-      if (response == null || response.user == null) {
-        setState(() {
-          _isVerifying = false;
-        });
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Invalid OTP. Please try again.'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-        return;
-      }
+      // TEMP: Bypass OTP verification for testing (accept any 6-digit code)
+      await Future.delayed(const Duration(milliseconds: 300));
 
       // 1) Set session so other screens can access
       UserSession.phoneNumber = widget.phoneNumber;

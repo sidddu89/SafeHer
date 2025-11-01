@@ -4,9 +4,13 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <!-- Phone state permission to read active subscriptions for dual-SIM handling -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- Location permissions (already used for panic location) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Background location for Android 10+ (API 29+) -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <!-- Declare GPS hardware capability; set required to false to allow install on devices without GPS

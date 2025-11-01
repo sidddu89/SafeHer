@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'manage_contacts_screen.dart';
-import 'panic_button_screen.dart';
 import 'user_session.dart';
 import 'supabase_config.dart';
-import 'services/firestore_service.dart';
 
 class SafeHerWelcomeScreen extends StatefulWidget {
   const SafeHerWelcomeScreen({Key? key}) : super(key: key);
@@ -29,46 +27,22 @@ class _SafeHerWelcomeScreenState extends State<SafeHerWelcomeScreen> {
     // First check Supabase session
     final session = SupabaseConfig.client.auth.currentSession;
     if (session != null) {
-      await _navigateLoggedInUser();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const ManageContactsScreen()),
+      );
       return;
     }
 
     // Then check persistent login state
     final hasPersistedLogin = await UserSession.restoreLoginState();
     if (hasPersistedLogin && mounted) {
-      await _navigateLoggedInUser();
-    }
-    // If not logged in, stay on welcome screen - user can tap login button
-  }
-
-  Future<void> _navigateLoggedInUser() async {
-    if (!mounted) return;
-    
-    try {
-      // Check if user has emergency contacts set up
-      final contacts = await FirestoreService.instance
-          .getEmergencyContactsOnce(UserSession.phoneNumber!);
-      
-      if (contacts.isNotEmpty) {
-        // User has contacts - go directly to panic button screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => PanicButtonScreen()),
-        );
-      } else {
-        // User has no contacts - go to manage contacts first
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const ManageContactsScreen()),
-        );
-      }
-    } catch (e) {
-      // If error checking contacts, go to manage contacts to be safe
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const ManageContactsScreen()),
       );
     }
+    // If not logged in, stay on welcome screen - user can tap login button
   }
 
   @override

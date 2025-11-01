@@ -51,9 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      // TEMP: Bypass real OTP sending for testing
-      await Future.delayed(const Duration(milliseconds: 300));
-      final success = true;
+      // Send actual OTP via Supabase
+      final result = await SupabaseAuthService.sendOTP(mobile);
+      final success = result.success;
       
       setState(() {
         _isLoading = false;
@@ -62,8 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
       if (success) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('OTP sent successfully!'),
+            SnackBar(
+              content: Text(result.message ?? 'OTP sent successfully!'),
               backgroundColor: Colors.green,
             ),
           );
@@ -85,8 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to send OTP. Please try again.'),
+            SnackBar(
+              content: Text(result.message ?? 'Failed to send OTP. Please try again.'),
               backgroundColor: Colors.red,
             ),
           );
@@ -113,48 +113,53 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Top Image
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0),
-                  child: Image.network(
-                    "https://lh3.googleusercontent.com/aida-public/AB6AXuCjOOYYs7u3YnpnxyMpfpwl7pQp4JUr9f-NPPWp3CLAu3Yj8_79ZnUoaCpUxRZUYyXkP3e5A-w3Q1AuWF4KEMiUWHMb_4qPy4q66QOYzcw_xF3xTpanhwBvWaHsb0etrIW5T_DdddRO_UqWmUhLDpLuU5N5s67YF9v-Zd0Dpmmtm84mPTUFeYgF5nQvAIhBL7M_u_qyj5Yp61fweSzEXyJK9xvpG3nElYOL9DaSqctCc05Yi1pJBhfR4tLI9UWDnMcUoRMdlPfkuVI",
-                    height: 218,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        height: 218,
-                        color: const Color(0xFFF0F1F4),
-                        child: const Icon(Icons.error, color: Colors.grey),
-                      );
-                    },
+          physics: const ClampingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Top Image - Flexible height that prevents overflow
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  constraints: const BoxConstraints(
+                    minHeight: 120,
+                    maxHeight: 200,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: Image.network(
+                      "https://lh3.googleusercontent.com/aida-public/AB6AXuCjOOYYs7u3YnpnxyMpfpwl7pQp4JUr9f-NPPWp3CLAu3Yj8_79ZnUoaCpUxRZUYyXkP3e5A-w3Q1AuWF4KEMiUWHMb_4qPy4q66QOYzcw_xF3xTpanhwBvWaHsb0etrIW5T_DdddRO_UqWmUhLDpLuU5N5s67YF9v-Zd0Dpmmtm84mPTUFeYgF5nQvAIhBL7M_u_qyj5Yp61fweSzEXyJK9xvpG3nElYOL9DaSqctCc05Yi1pJBhfR4tLI9UWDnMcUoRMdlPfkuVI",
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: const Color(0xFFF0F1F4),
+                          child: const Icon(Icons.error, color: Colors.grey),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
 
-              // Welcome Back Title
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
-                child: Text(
+                const SizedBox(height: 24),
+
+                // Welcome Back Title
+                const Text(
                   'Welcome Back',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Manrope',
                     color: Color(0xFF111317),
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
 
-              // Subtitle
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 4, 16, 12),
-                child: Text(
+                const SizedBox(height: 8),
+
+                // Subtitle
+                const Text(
                   'Enter your details to log in.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -164,14 +169,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-              ),
-              
-              const SizedBox(height: 12),
+                
+                const SizedBox(height: 32),
 
-              // Name Input Field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                child: TextField(
+                // Name Input Field
+                TextField(
                   controller: _nameController,
                   decoration: InputDecoration(
                     hintText: 'Name',
@@ -190,12 +192,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontSize: 16,
                   ),
                 ),
-              ),
 
-              // Mobile Number Input Field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                child: TextField(
+                const SizedBox(height: 16),
+
+                // Mobile Number Input Field
+                TextField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   maxLength: 10,
@@ -210,6 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderSide: BorderSide.none,
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                    counterText: '', // Hide character counter
                   ),
                   style: const TextStyle(
                     fontFamily: 'Manrope',
@@ -217,12 +219,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontSize: 16,
                   ),
                 ),
-              ),
 
-              // Send OTP Button
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SizedBox(
+                const SizedBox(height: 32),
+
+                // Send OTP Button
+                SizedBox(
                   height: 48,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _sendOtp,
@@ -247,8 +248,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                   ),
                 ),
-              ),
-            ],
+
+                // Bottom padding to handle keyboard and prevent overflow
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 20),
+              ],
+            ),
           ),
         ),
       ),
